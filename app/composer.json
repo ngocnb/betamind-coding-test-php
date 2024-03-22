@@ -10,8 +10,8 @@
         "cakephp/migrations": "^3.7",
         "cakephp/plugin-installer": "^1.3",
         "fakerphp/faker": "^1.23",
-        "ishanvyas22/asset-mix": "^1.5.0",
-        "mobiledetect/mobiledetectlib": "^3.74"
+        "mobiledetect/mobiledetectlib": "^3.74",
+        "rrd108/api-token-authenticator": "^0.4"
     },
     "require-dev": {
         "cakephp/bake": "^2.8",
