@@ -10,4 +10,14 @@ RUN apk --no-cache update \
     && docker-php-ext-install intl zip pdo pdo_mysql mysqli \
     && docker-php-ext-enable intl
 
+RUN apk add nodejs npm
+
+RUN node -v
+RUN npm -v
+
 WORKDIR /var/www
+
+RUN mkdir /var/www/tmp
+RUN chmod 777 /var/www/tmp
+RUN mkdir /var/www/logs
+RUN chmod 777 /var/www/logs
