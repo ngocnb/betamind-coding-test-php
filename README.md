@@ -32,6 +32,14 @@ Set up the database:
 bin/cake migrations migrate
 ```
 
+Set up seed data:
+
+```
+bin/cake migrations seed --seed UsersSeed
+bin/cake migrations seed --seed ArticlesSeed
+bin/cake migrations seed --seed UserArticleReactionsSeed
+```
+
 ### Accessing the Application
 
 The application should now be accessible at http://localhost:34251
