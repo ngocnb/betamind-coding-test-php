@@ -40,6 +40,16 @@ bin/cake migrations seed --seed ArticlesSeed
 bin/cake migrations seed --seed UserArticleReactionsSeed
 ```
 
+### Build frontend
+
+Build vue.js frontend:
+
+```
+cd webroot/vue
+npm install
+npm run build
+```
+
 ### Accessing the Application
 
 The application should now be accessible at http://localhost:34251
