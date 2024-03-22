@@ -146,13 +146,13 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         ]);
 
         // https://book.cakephp.org/authentication/2/en/authenticators.html#jwt
-//        $service->loadIdentifier('Authentication.JwtSubject');
+        //        $service->loadIdentifier('Authentication.JwtSubject');
         // Load the authenticators.
-//        $service->loadAuthenticator('Authentication.Jwt', [
-//            'secretKey'     => file_get_contents(CONFIG . '/jwt.pem'),
-//            'algorithm'     => 'RS256',
-//            'returnPayload' => false,
-//        ]);
+        //        $service->loadAuthenticator('Authentication.Jwt', [
+        //            'secretKey'     => file_get_contents(CONFIG . '/jwt.pem'),
+        //            'algorithm'     => 'RS256',
+        //            'returnPayload' => false,
+        //        ]);
 
         $service->loadIdentifier('Authentication.Password', [
             'returnPayload' => false,

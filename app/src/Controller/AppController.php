@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare (strict_types = 1);
 
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
@@ -26,8 +26,7 @@ use Cake\Controller\Controller;
  *
  * @link https://book.cakephp.org/4/en/controllers.html#the-app-controller
  */
-class AppController extends Controller
-{
+class AppController extends Controller {
     /**
      * Initialization hook method.
      *
@@ -37,8 +36,7 @@ class AppController extends Controller
      *
      * @return void
      */
-    public function initialize(): void
-    {
+    public function initialize(): void{
         parent::initialize();
 
         $this->loadComponent('RequestHandler');
@@ -49,5 +47,7 @@ class AppController extends Controller
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
+        // Add this line to check authentication result and lock your site
+        $this->loadComponent('Authentication.Authentication');
     }
 }

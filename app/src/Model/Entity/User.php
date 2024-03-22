@@ -1,8 +1,9 @@
 <?php
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Model\Entity;
 
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
@@ -17,8 +18,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Article[] $articles
  * @property \App\Model\Entity\UserArticleReaction[] $user_article_reactions
  */
-class User extends Entity
-{
+class User extends Entity {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -29,11 +29,11 @@ class User extends Entity
      * @var array<string, bool>
      */
     protected $_accessible = [
-        'email' => true,
-        'password' => true,
-        'created_at' => true,
-        'updated_at' => true,
-        'articles' => true,
+        'email'                  => true,
+        'password'               => true,
+        'created_at'             => true,
+        'updated_at'             => true,
+        'articles'               => true,
         'user_article_reactions' => true,
     ];
 
@@ -45,4 +45,11 @@ class User extends Entity
     protected $_hidden = [
         'password',
     ];
+
+    // Add this method
+    protected function _setPassword(string $password):  ? string {
+        if (strlen($password) > 0) {
+            return (new DefaultPasswordHasher())->hash($password);
+        }
+    }
 }
