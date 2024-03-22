@@ -51,10 +51,6 @@ return function (RouteBuilder $routes): void{
 
     $routes->setExtensions(['json', 'xml']);
 
-    $routes->scope('/api', function (RouteBuilder $builder): void {
-        $builder->setExtensions(['json']);
-    });
-
     $routes->scope('/', function (RouteBuilder $builder): void{
         /*
          * Here, we are connecting '/' (base path) to a controller called 'Pages',
@@ -94,4 +90,9 @@ return function (RouteBuilder $routes): void{
  * });
  * ```
  */
+    $routes->scope('/api', function (RouteBuilder $builder): void {
+        $builder->setExtensions(['json']);
+    });
+
+
 };
