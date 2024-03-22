@@ -13,7 +13,7 @@ class CreateUserArticleReactions extends AbstractMigration {
         $table = $this->table('user_article_reactions');
         $table->addColumn('user_id', 'integer')
             ->addColumn('article_id', 'integer')
-            ->addColumn('reaction', 'boolean', ['default' => false])
+            ->addColumn('like', 'boolean', ['default' => false])
             ->addColumn('created_at', 'datetime')
             ->addColumn('updated_at', 'datetime')
             ->addForeignKey('user_id', 'users', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
