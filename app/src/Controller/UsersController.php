@@ -4,7 +4,6 @@ declare (strict_types = 1);
 
 namespace App\Controller;
 
-use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Security;
 
 /**
@@ -20,8 +19,9 @@ class UsersController extends AppController {
      */
     public function beforeFilter(\Cake\Event\EventInterface $event) {
         parent::beforeFilter($event);
-        $this->Authentication->allowUnauthenticated(['login']);
+        $this->Authentication->allowUnauthenticated(['login', 'register']);
     }
+
     /**
      *
      */
@@ -33,22 +33,54 @@ class UsersController extends AppController {
             $userIdentity = $this->Authentication->getIdentity();
 
             $user        = $userIdentity->getOriginalData();
-            $user->token = $this->generateToken();
+            $user->token = $this->_generateToken();
             $user        = $this->Users->save($user);
             $user        = $this->Users->get($user->id);
 
-            $this->set(compact('user'));
-            $this->viewBuilder()->setOption('serialize', ['user']);
+            $this->set([
+                'success' => true,
+                'user'    => $user,
+            ]);
+            $this->viewBuilder()->setOption('serialize', ['success', 'user']);
         } else {
-            throw new NotFoundException(__('User not found'));
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => $result->getErrors(),
+                ]
+            );
         }
+    }
+
+    public function register() {
+        $this->request->allowMethod(['post']);
+        $data               = $this->request->getData();
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $user               = $this->Users->newEntity($data);
+        if ($this->Users->save($user)) {
+            $this->set(
+                [
+                    'success' => true,
+                    'data'    => $user->toArray(),
+                ]
+            );
+        } else {
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => $user->getErrors(),
+                ]
+            );
+        }
+        $this->viewBuilder()->setOption('serialize', ['success', 'data', 'errors']);
     }
 
     /**
      * @param int $length
      * @return array|string|string[]|null
      */
-    private function generateToken(int $length = 36) {
+    private function _generateToken(int $length = 36) {
         $random  = base64_encode(Security::randomBytes($length));
         $cleaned = preg_replace('/[^A-Za-z0-9]/', '', $random);
         return $cleaned;

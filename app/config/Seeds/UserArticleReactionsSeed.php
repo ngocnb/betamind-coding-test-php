@@ -17,13 +17,13 @@ class UserArticleReactionsSeed extends AbstractSeed {
      *
      * @return void
      */
-    public function run(): void{
+    public function run(): void {
         $faker = Faker\Factory::create();
 
         $connection = ConnectionManager::get('default')->selectQuery();
         $reactions  = $connection->select('id')->from('user_article_reactions')->execute()->count();
         if ($reactions > 0) {
-            $this->__updateArticlesLikeCount($connection);
+            $this->_updateArticlesLikeCount($connection);
             return;
         }
 
@@ -41,16 +41,16 @@ class UserArticleReactionsSeed extends AbstractSeed {
         }
 
         // remove duplicates by user_id and article_id
-        $data = $this->__removeDuplicates($data);
+        $data = $this->_removeDuplicates($data);
 
         $table = $this->table('user_article_reactions');
         $table->insert($data)->save();
 
-        $this->__updateArticlesLikeCount($connection);
+        $this->_updateArticlesLikeCount($connection);
     }
 
     // Function to remove duplicates by combination of user_id and article_id
-    private function __removeDuplicates($data) {
+    private function _removeDuplicates($data) {
         $result = [];
         foreach ($data as $item) {
             $key          = $item['user_id'] . '_' . $item['article_id'];
@@ -59,7 +59,7 @@ class UserArticleReactionsSeed extends AbstractSeed {
         return array_values($result);
     }
 
-    private function __updateArticlesLikeCount() {
+    private function _updateArticlesLikeCount() {
         $connection = ConnectionManager::get('default');
         $articles   = $connection->execute('SELECT id FROM articles')->fetchAll('assoc');
         foreach ($articles as $article) {
