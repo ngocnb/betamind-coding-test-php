@@ -94,6 +94,7 @@ return function (RouteBuilder $routes): void {
         $builder->setExtensions(['json']);
 
         $builder->connect('/users/register', ['controller' => 'Users', 'action' => 'register', '_method' => 'POST']);
+        $builder->resources('Articles');
     });
 
 };
