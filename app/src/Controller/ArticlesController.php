@@ -48,12 +48,37 @@ class ArticlesController extends AppController {
      */
     public function view($id = null) {
         $article = $this->Articles->get($id, [
-            'contain' => ['Users', 'UserArticleReactions'],
+            'contain' => ['Users'],
         ]);
+
+        try {
+            // get current logged in user
+            $userId = $this->Authentication->getIdentityData('id');
+            // check if user has already liked the article
+            $reacted = $this->Articles->UserArticleReactions->exists(
+                [
+                    'article_id = ' => $id,
+                    'user_id = '    => $userId,
+                    'reaction = '   => UserArticleReaction::REACTION_LIKE,
+                ]
+            );
+
+            $this->set('reacted', $reacted);
+            if ($userId === $article->user_id) {
+                $this->set('is_author', true);
+            } else {
+                $this->set('is_author', false);
+            }
+        } catch (\Exception $e) {
+            // user is not logged in
+            // do nothing
+            $this->set('reacted', false);
+            $this->set('is_author', false);
+        }
 
         $this->set('success', true);
         $this->set(compact('article'));
-        $this->viewBuilder()->setOption('serialize', ['success', 'article']);
+        $this->viewBuilder()->setOption('serialize', ['success', 'article', 'reacted', 'is_author']);
     }
 
     /**
