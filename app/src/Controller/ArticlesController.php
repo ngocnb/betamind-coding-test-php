@@ -2,6 +2,7 @@
 declare (strict_types = 1);
 
 namespace App\Controller;
+use App\Model\Entity\UserArticleReaction;
 
 /**
  * Articles Controller
@@ -177,5 +178,68 @@ class ArticlesController extends AppController {
         }
 
         $this->viewBuilder()->setOption('serialize', ['success', 'errors']);
+    }
+
+    /**
+     * React method
+     * @param string|null $id Article id.
+     *
+     */
+    public function react($id = null) {
+        $this->request->allowMethod(['post']);
+
+        $article = $this->Articles->get($id);
+
+        // check if user has already reacted
+        $existingReaction = $this->Articles->UserArticleReactions->find()
+            ->where([
+                'article_id = ' => $id,
+                'user_id = '    => $this->Authentication->getIdentityData('id'),
+                'reaction = '   => UserArticleReaction::REACTION_LIKE,
+            ])
+            ->first();
+
+        if ($existingReaction) {
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => 'You have already liked this article.',
+                ]
+            );
+            $this->viewBuilder()->setOption('serialize', ['success', 'errors']);
+            return;
+        }
+
+        // add reaction
+        $data['user_id']    = $this->Authentication->getIdentityData('id');
+        $data['article_id'] = $id;
+        $data['reaction']   = UserArticleReaction::REACTION_LIKE;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $articleReaction    = $this->Articles->UserArticleReactions->newEmptyEntity();
+        $articleReaction    = $this->Articles->UserArticleReactions->patchEntity($articleReaction, $data);
+
+        if ($this->Articles->UserArticleReactions->save($articleReaction)) {
+            $article->like_count = $this->Articles->UserArticleReactions->find()
+                ->where(['article_id = ' => $data['article_id'], 'reaction = ' => UserArticleReaction::REACTION_LIKE])
+                ->count();
+            $this->Articles->save($article);
+
+            $this->set(
+                [
+                    'success' => true,
+                    'data'    => $article->toArray(),
+                ]
+            );
+        } else {
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => $articleReaction->getErrors(),
+                ]
+            );
+        }
+
+        $this->viewBuilder()->setOption('serialize', ['success', 'data', 'errors']);
     }
 }

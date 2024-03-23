@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Model\Entity;
 
@@ -11,15 +11,16 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $user_id
  * @property int $article_id
- * @property bool $like
+ * @property int $reaction
  * @property \Cake\I18n\FrozenTime $created_at
  * @property \Cake\I18n\FrozenTime $updated_at
  *
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\Article $article
  */
-class UserArticleReaction extends Entity
-{
+class UserArticleReaction extends Entity {
+    CONST REACTION_LIKE = 1;
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -30,12 +31,12 @@ class UserArticleReaction extends Entity
      * @var array<string, bool>
      */
     protected $_accessible = [
-        'user_id' => true,
+        'user_id'    => true,
         'article_id' => true,
-        'like' => true,
+        'reaction'   => true,
         'created_at' => true,
         'updated_at' => true,
-        'user' => true,
-        'article' => true,
+        'user'       => true,
+        'article'    => true,
     ];
 }
