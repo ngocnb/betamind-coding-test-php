@@ -26,7 +26,7 @@ class ArticlesController extends AppController {
      */
     public function index() {
         $this->paginate = [
-            // 'contain' => ['Users'],
+            'contain' => ['Users'],
         ];
         $articles = $this->paginate($this->Articles, [
             'limit' => 10,
@@ -47,7 +47,7 @@ class ArticlesController extends AppController {
      */
     public function view($id = null) {
         $article = $this->Articles->get($id, [
-            'contain' => ['UserArticleReactions'],
+            'contain' => ['Users', 'UserArticleReactions'],
         ]);
 
         $this->set('success', true);
@@ -61,18 +61,32 @@ class ArticlesController extends AppController {
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add() {
-        $article = $this->Articles->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $article = $this->Articles->patchEntity($article, $this->request->getData());
-            if ($this->Articles->save($article)) {
-                $this->Flash->success(__('The article has been saved.'));
+        $this->request->allowMethod(['post']);
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The article could not be saved. Please, try again.'));
+        $article            = $this->Articles->newEmptyEntity();
+        $data               = $this->request->getData();
+        $data['user_id']    = $this->Authentication->getIdentityData('id');
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $article            = $this->Articles->patchEntity($article, $data);
+
+        if ($this->Articles->save($article)) {
+            $this->set(
+                [
+                    'success' => true,
+                    'data'    => $article->toArray(),
+                ]
+            );
+        } else {
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => $article->getErrors(),
+                ]
+            );
         }
-        $users = $this->Articles->Users->find('list', ['limit' => 200])->all();
-        $this->set(compact('article', 'users'));
+
+        $this->viewBuilder()->setOption('serialize', ['success', 'data', 'errors']);
     }
 
     /**
