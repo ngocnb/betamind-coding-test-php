@@ -2,6 +2,7 @@
 declare (strict_types = 1);
 
 namespace App\Controller;
+use App\Model\Entity\UserArticleReaction;
 
 /**
  * Articles Controller
@@ -47,12 +48,37 @@ class ArticlesController extends AppController {
      */
     public function view($id = null) {
         $article = $this->Articles->get($id, [
-            'contain' => ['Users', 'UserArticleReactions'],
+            'contain' => ['Users'],
         ]);
+
+        try {
+            // get current logged in user
+            $userId = $this->Authentication->getIdentityData('id');
+            // check if user has already liked the article
+            $reacted = $this->Articles->UserArticleReactions->exists(
+                [
+                    'article_id = ' => $id,
+                    'user_id = '    => $userId,
+                    'reaction = '   => UserArticleReaction::REACTION_LIKE,
+                ]
+            );
+
+            $this->set('reacted', $reacted);
+            if ($userId === $article->user_id) {
+                $this->set('is_author', true);
+            } else {
+                $this->set('is_author', false);
+            }
+        } catch (\Exception $e) {
+            // user is not logged in
+            // do nothing
+            $this->set('reacted', false);
+            $this->set('is_author', false);
+        }
 
         $this->set('success', true);
         $this->set(compact('article'));
-        $this->viewBuilder()->setOption('serialize', ['success', 'article']);
+        $this->viewBuilder()->setOption('serialize', ['success', 'article', 'reacted', 'is_author']);
     }
 
     /**
@@ -177,5 +203,68 @@ class ArticlesController extends AppController {
         }
 
         $this->viewBuilder()->setOption('serialize', ['success', 'errors']);
+    }
+
+    /**
+     * React method
+     * @param string|null $id Article id.
+     *
+     */
+    public function react($id = null) {
+        $this->request->allowMethod(['post']);
+
+        $article = $this->Articles->get($id);
+
+        // check if user has already reacted
+        $existingReaction = $this->Articles->UserArticleReactions->find()
+            ->where([
+                'article_id = ' => $id,
+                'user_id = '    => $this->Authentication->getIdentityData('id'),
+                'reaction = '   => UserArticleReaction::REACTION_LIKE,
+            ])
+            ->first();
+
+        if ($existingReaction) {
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => 'You have already liked this article.',
+                ]
+            );
+            $this->viewBuilder()->setOption('serialize', ['success', 'errors']);
+            return;
+        }
+
+        // add reaction
+        $data['user_id']    = $this->Authentication->getIdentityData('id');
+        $data['article_id'] = $id;
+        $data['reaction']   = UserArticleReaction::REACTION_LIKE;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $articleReaction    = $this->Articles->UserArticleReactions->newEmptyEntity();
+        $articleReaction    = $this->Articles->UserArticleReactions->patchEntity($articleReaction, $data);
+
+        if ($this->Articles->UserArticleReactions->save($articleReaction)) {
+            $article->like_count = $this->Articles->UserArticleReactions->find()
+                ->where(['article_id = ' => $data['article_id'], 'reaction = ' => UserArticleReaction::REACTION_LIKE])
+                ->count();
+            $this->Articles->save($article);
+
+            $this->set(
+                [
+                    'success' => true,
+                    'data'    => $article->toArray(),
+                ]
+            );
+        } else {
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => $articleReaction->getErrors(),
+                ]
+            );
+        }
+
+        $this->viewBuilder()->setOption('serialize', ['success', 'data', 'errors']);
     }
 }

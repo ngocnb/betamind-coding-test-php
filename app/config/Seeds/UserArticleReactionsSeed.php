@@ -1,5 +1,6 @@
 <?php
 
+use App\Model\Entity\UserArticleReaction;
 use Cake\Datasource\ConnectionManager;
 use Migrations\AbstractSeed;
 
@@ -34,7 +35,7 @@ class UserArticleReactionsSeed extends AbstractSeed {
             $data[] = [
                 'user_id'    => $faker->numberBetween(2, 11),
                 'article_id' => $faker->numberBetween(1, 100),
-                'like'       => true,
+                'reaction'   => UserArticleReaction::REACTION_LIKE,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];

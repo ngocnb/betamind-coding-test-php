@@ -95,8 +95,8 @@ return function (RouteBuilder $routes): void {
 
         $builder->connect('/users/register', ['controller' => 'Users', 'action' => 'register', '_method' => 'POST']);
         $builder->resources('Articles');
-        $builder->connect('/articles/:id', ['controller' => 'Articles', 'action' => 'edit'])
-            ->setPatterns(['id' => '\d+'])
+        $builder->connect('/articles/{id}/react', ['controller' => 'Articles', 'action' => 'react'])
+            ->setPass(['id'])
             ->setMethods(['POST']);
     });
 
