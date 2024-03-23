@@ -51,22 +51,13 @@ return function (RouteBuilder $routes): void{
 
     $routes->setExtensions(['json', 'xml']);
 
-    $routes->scope('/api', function (RouteBuilder $builder): void {
-        // No $builder->applyMiddleware() here.
-
-        // Parse specified extensions from URLs
-        // $builder->setExtensions(['json', 'xml']);
-
-        // Connect API actions here.
-    });
-
     $routes->scope('/', function (RouteBuilder $builder): void{
         /*
          * Here, we are connecting '/' (base path) to a controller called 'Pages',
          * its action called 'display', and we pass a param to select the view file
          * to use (in this case, templates/Pages/home.php)...
          */
-        $builder->connect('/*', ['controller' => 'Pages', 'action' => 'display', 'home']);
+        $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
         /*
          * Connect catchall routes for all controllers.
@@ -99,4 +90,9 @@ return function (RouteBuilder $routes): void{
  * });
  * ```
  */
+    $routes->scope('/api', function (RouteBuilder $builder): void {
+        $builder->setExtensions(['json']);
+    });
+
+
 };
