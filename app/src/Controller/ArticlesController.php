@@ -97,20 +97,44 @@ class ArticlesController extends AppController {
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null) {
+        $this->request->allowMethod(['put', 'patch']);
+        $data = $this->request->getData();
+
         $article = $this->Articles->get($id, [
             'contain' => [],
         ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $article = $this->Articles->patchEntity($article, $this->request->getData());
-            if ($this->Articles->save($article)) {
-                $this->Flash->success(__('The article has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The article could not be saved. Please, try again.'));
+        // verify author
+        if ($article->user_id !== $this->Authentication->getIdentityData('id')) {
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => 'You are not authorized to edit this article.',
+                ]
+            );
+            $this->viewBuilder()->setOption('serialize', ['success', 'errors']);
+            return;
         }
-        $users = $this->Articles->Users->find('list', ['limit' => 200])->all();
-        $this->set(compact('article', 'users'));
+
+        $data               = $this->request->getData();
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        $article            = $this->Articles->patchEntity($article, $this->request->getData());
+        if ($this->Articles->save($article)) {
+            $this->set(
+                [
+                    'success' => true,
+                    'data'    => $article->toArray(),
+                ]
+            );
+        } else {
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => $article->getErrors(),
+                ]
+            );
+        }
+        $this->viewBuilder()->setOption('serialize', ['success', 'data', 'errors']);
     }
 
     /**
