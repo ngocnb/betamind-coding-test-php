@@ -26,7 +26,7 @@ class ArticlesController extends AppController {
      */
     public function index() {
         $this->paginate = [
-            'contain' => ['Users'],
+            // 'contain' => ['Users'],
         ];
         $articles = $this->paginate($this->Articles, [
             'limit' => 10,
@@ -47,10 +47,12 @@ class ArticlesController extends AppController {
      */
     public function view($id = null) {
         $article = $this->Articles->get($id, [
-            'contain' => ['Users', 'UserArticleReactions'],
+            'contain' => ['UserArticleReactions'],
         ]);
 
+        $this->set('success', true);
         $this->set(compact('article'));
+        $this->viewBuilder()->setOption('serialize', ['success', 'article']);
     }
 
     /**
