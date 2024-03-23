@@ -98,7 +98,6 @@ class ArticlesController extends AppController {
      */
     public function edit($id = null) {
         $this->request->allowMethod(['put', 'patch']);
-        $data = $this->request->getData();
 
         $article = $this->Articles->get($id, [
             'contain' => [],
@@ -145,14 +144,38 @@ class ArticlesController extends AppController {
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null) {
-        $this->request->allowMethod(['post', 'delete']);
-        $article = $this->Articles->get($id);
-        if ($this->Articles->delete($article)) {
-            $this->Flash->success(__('The article has been deleted.'));
-        } else {
-            $this->Flash->error(__('The article could not be deleted. Please, try again.'));
+        $this->request->allowMethod(['delete']);
+        $article = $this->Articles->get($id, [
+            'contain' => [],
+        ]);
+
+        // verify author
+        if ($article->user_id !== $this->Authentication->getIdentityData('id')) {
+            $this->set(
+                [
+                    'success' => false,
+                    'errors'  => 'You are not authorized to delete this article.',
+                ]
+            );
+            $this->viewBuilder()->setOption('serialize', ['success', 'errors']);
+            return;
         }
 
-        return $this->redirect(['action' => 'index']);
+        if ($this->Articles->delete($article)) {
+            $this->set(
+                [
+                    'success' => true,
+                ]
+            );
+        } else {
+            $this->set(
+                [
+                    'success' => true,
+                    'errors'  => $article->getErrors(),
+                ]
+            );
+        }
+
+        $this->viewBuilder()->setOption('serialize', ['success', 'errors']);
     }
 }
