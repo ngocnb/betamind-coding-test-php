@@ -1,8 +1,8 @@
 import ApiService from "./BaseApiService";
 
 class ArticleApiSerivce {
-    getAll() {
-        return ApiService.get("/api/articles.json");
+    getAll(page = 1) {
+        return ApiService.get(`/api/articles.json?page=${page}`);
     }
 
     get(id) {
