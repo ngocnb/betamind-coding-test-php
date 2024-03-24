@@ -1,9 +1,9 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import ArticleApiService from '@/services/ArticleApiService';
+
 </script>
 
 <template>
   <main>
-    <TheWelcome />
   </main>
 </template>

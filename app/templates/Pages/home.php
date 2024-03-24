@@ -56,21 +56,33 @@ endif;
 <!DOCTYPE html>
 <html>
 <head>
-    <?=$this->Html->charset()?>
+    <?=$this->Html->charset();?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
         CakePHP: the rapid development PHP framework:
-        <?=$this->fetch('title')?>
+        <?=$this->fetch('title');?>
     </title>
-    <?=$this->Html->meta('icon')?>
+    <?=$this->Html->meta('icon');?>
 
-    <?=$this->fetch('meta')?>
-    <link href="/vue/dist/app.css" rel="stylesheet" />
-    <link href="/vue/dist/app2.css" rel="stylesheet" />
+    <?=$this->fetch('meta');?>
+    <!-- <link
+        href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;1,700&display=swap"
+        rel="stylesheet"
+    />
+    <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"
+    /> -->
+    <link href="/app.css" rel="stylesheet" />
+    <link href="/app2.css" rel="stylesheet" />
+    <link href="/app3.css" rel="stylesheet" />
+    <link href="/app4.css" rel="stylesheet" />
+    <link href="/app5.css" rel="stylesheet" />
+    <link href="/app6.css" rel="stylesheet" />
 
 </head>
 <body>
 <div id="app"></div>
-<script type="module" src="/vue/dist/app.js"></script>
+<script type="module" src="/app.js"></script>
 </body>
 </html>
