@@ -7,11 +7,17 @@ import { RouterLink, RouterView } from "vue-router";
         <template #top>
             <VaNavbar color="primary" class="mb-3">
                 <template #left>
-                    <VaNavbarItem class="logo"> Home </VaNavbarItem>
+                    <VaNavbarItem class="logo">
+                        <RouterLink to="/"> Home </RouterLink>
+                    </VaNavbarItem>
                 </template>
                 <template #right>
-                    <VaNavbarItem> Sign Up </VaNavbarItem>
-                    <VaNavbarItem> Log in </VaNavbarItem>
+                    <VaNavbarItem>
+                        <RouterLink to="/signup"> Sign Up </RouterLink>
+                    </VaNavbarItem>
+                    <VaNavbarItem>
+                        <RouterLink to="/login"> Log in </RouterLink>
+                    </VaNavbarItem>
                 </template>
             </VaNavbar>
         </template>
@@ -22,4 +28,8 @@ import { RouterLink, RouterView } from "vue-router";
     </VaLayout>
 </template>
 
-<style scoped></style>
+<style scoped>
+.va-navbar__item a {
+    color: white;
+}
+</style>

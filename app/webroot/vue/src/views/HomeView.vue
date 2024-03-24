@@ -21,6 +21,9 @@ const HomeView = {
             const response = await ArticleApiService.getAll(this.page);
             this.articles = [...this.articles, ...response.data.articles];
         },
+        goToArticleDetail(id) {
+            this.$router.push({ name: "article-detail", params: { id } });
+        },
     },
     mounted() {
         this.fetchArticles();
@@ -39,6 +42,8 @@ export default HomeView;
             v-for="(article, index) in articles"
             :key="index"
             class="article-card"
+            @click="goToArticleDetail(article.id)"
+            style="cursor: pointer"
         >
             <VaCardTitle>{{ article.title }}</VaCardTitle>
             <VaCardContent>
