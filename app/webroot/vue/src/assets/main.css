@@ -36,3 +36,19 @@ a,
         width: 100%;
     }
 }
+
+.flex {
+    display: flex !important;
+}
+.flex-col {
+    flex-direction: column !important;
+}
+.gap-6 {
+    gap: 1.5rem !important;
+}
+.w-max-600 {
+    max-width: 600px;
+}
+.m-0-auto {
+    margin: 0 auto;
+}

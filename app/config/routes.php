@@ -58,6 +58,9 @@ return function (RouteBuilder $routes): void {
          * to use (in this case, templates/Pages/home.php)...
          */
         $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+        $builder->connect('/signup', ['controller' => 'Pages', 'action' => 'display', 'home']);
+        $builder->connect('/login', ['controller' => 'Pages', 'action' => 'display', 'home']);
+        $builder->connect('/article/{id}', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
         /*
          * Connect catchall routes for all controllers.
