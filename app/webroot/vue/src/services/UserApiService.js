@@ -5,7 +5,7 @@ class UserApiService {
         return ApiService.post("/users/login.json", data);
     }
 
-    register(data) {
+    signUp(data) {
         return ApiService.post("/api/users/register.json", data);
     }
 }

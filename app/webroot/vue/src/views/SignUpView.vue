@@ -66,8 +66,26 @@ const SignUpView = {
             try {
                 const response = await UserApiService.signUp(this.form);
                 console.log("response", response);
-                this.$router.push({ name: "login" });
+                if (response.data.success !== undefined) {
+                    let message = response.data.success
+                        ? "Sign up successfully! Please login!"
+                        : "Signing up failed! Please check again!";
+                    this.$vaToast.init({
+                        message: message,
+                        color: response.data.success ? "success" : "danger",
+                    });
+                    this.$router.push({ name: "login" });
+                } else {
+                    this.$vaToast.init({
+                        message: "Signing up failed! Please check again!",
+                        color: "danger",
+                    });
+                }
             } catch (error) {
+                this.$vaToast.init({
+                    message: "Signing up failed! Please check again!",
+                    color: "danger",
+                });
                 console.error("error", error);
             }
         },
