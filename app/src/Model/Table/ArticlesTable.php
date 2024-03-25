@@ -64,11 +64,12 @@ class ArticlesTable extends Table {
         $validator
             ->scalar('title')
             ->maxLength('title', 255)
-            ->requirePresence('title', 'create')
+            ->requirePresence('title')
             ->notEmptyString('title');
 
         $validator
             ->scalar('body')
+            ->requirePresence('body')
             ->notEmptyString('body');
 
         $validator

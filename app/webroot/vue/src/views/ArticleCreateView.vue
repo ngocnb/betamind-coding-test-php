@@ -81,6 +81,15 @@ const ArticleCreateView = {
             }
         },
     },
+    mounted() {
+        if (!this.$userStore.isLoggedIn) {
+            this.$vaToast.init({
+                message: "Please log in to create an article",
+                color: "danger",
+            });
+            this.$router.push({ name: "home" });
+        }
+    },
 };
 
 export default ArticleCreateView;
