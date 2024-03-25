@@ -60,7 +60,7 @@ Please run the migration and seed data before running the test.
 
 Default user: `admin@betamind.test`. Password: `P@ssw0rd`.
 
-For the API test, you can import the Postman collection file: `Betamind.postman_collection.json`.
+For the API test, you can import the Postman collection file: `Betamind.postman_collection.json`. I also write the test in postman.
 
 Please build the frontend before running the test.
 
