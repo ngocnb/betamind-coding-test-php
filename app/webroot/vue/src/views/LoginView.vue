@@ -23,7 +23,7 @@
                 label="password"
                 type="password"
             />
-            <VaButton @click="submitForm">Sign up</VaButton>
+            <VaButton @click="submitForm">Log in</VaButton>
         </VaForm>
     </div>
 </template>
@@ -57,7 +57,6 @@ const LoginView = {
             }
             try {
                 const response = await UserApiService.login(this.form);
-                console.log("response", response);
                 if (response.data.success !== undefined) {
                     let message = response.data.success
                         ? "Log in successfully!"
@@ -82,10 +81,10 @@ const LoginView = {
                     });
                 }
             } catch (error) {
+                console.log("error", error);
                 this.$vaToast.init({
-                    title: "Error",
-                    message: error.response.data.message,
-                    variant: "error",
+                    message: "Log in failed! Please check again!",
+                    color: "danger",
                 });
             }
         },

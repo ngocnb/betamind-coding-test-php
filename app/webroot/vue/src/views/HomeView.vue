@@ -12,9 +12,7 @@ const HomeView = {
     methods: {
         async fetchArticles() {
             const response = await ArticleApiService.getAll(this.page);
-            console.log("response", response);
             this.articles = response.data.articles;
-            console.log("articles", this.articles);
         },
         async appendRecordsAsync() {
             this.page++;

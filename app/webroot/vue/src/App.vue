@@ -14,6 +14,10 @@ const App = {
     methods: {
         logout() {
             this.$userStore.logout();
+            this.$vaToast.init({
+                message: "Log out successfully!",
+                color: "success",
+            });
             this.$router.push({ name: "home" });
         },
     },
@@ -52,6 +56,9 @@ export default App;
                 <template #right v-if="$userStore.isLoggedIn === true">
                     <VaNavbarItem>
                         {{ $userStore.getUser.email }}
+                    </VaNavbarItem>
+                    <VaNavbarItem>
+                        <RouterLink to="/article/create"> Create new Article </RouterLink>
                     </VaNavbarItem>
                     <VaNavbarItem @click="logout()" style="cursor: pointer;">
                         Log out
