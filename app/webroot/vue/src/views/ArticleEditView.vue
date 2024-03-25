@@ -22,7 +22,7 @@
                 rows="10"
                 style="height: 250px;"
             />
-            <VaButton @click="submitForm">Create</VaButton>
+            <VaButton @click="submitForm">Update</VaButton>
         </VaForm>
     </div>
 </template>
@@ -38,12 +38,33 @@ const ArticleEditView = {
                 title: "",
                 body: "",
             },
+            article: null,
+            isAuthor: false,
         };
     },
     computed: {
         $userStore: () => useUserStore()
     },
     methods: {
+        async fetchArticle() {
+            const id = this.$route.params.id;
+            const token = this.$userStore.getUser ? this.$userStore.getUser.token : null;
+            const response = await ArticleApiService.get(id, token);
+            this.article = response.data.article;
+            this.isAuthor = response.data.is_author;
+
+            this.form.title = this.article.title;
+            this.form.body = this.article.body;
+
+            // check if user is the author of the article
+            if (!this.isAuthor) {
+                this.$vaToast.init({
+                    message: "You are not the author of this article",
+                    color: "danger",
+                });
+                this.$router.push({ name: "home" });
+            }
+        },
         async submitForm() {
             const isValid = await this.$refs.formRef.validate();
             if (!isValid) {
@@ -54,33 +75,39 @@ const ArticleEditView = {
                 return;
             }
             try {
-                const response = await ArticleApiService.create(this.form, this.$userStore.getUser.token);
+                const response = await ArticleApiService.update(this.$route.params.id, this.form, this.$userStore.getUser.token);
                 if (response.data.success !== undefined) {
-                    let message = response.data.success ? "Article created successfully" : "Error creating article!";
+                    let message = response.data.success ? "Article updated successfully" : "Error updating article!";
                     this.$vaToast.init({
                         message: message,
                         color: response.data.success ? "success" : "danger",
                     });
 
                     if (response.data.success) {
-                        this.$router.push({ name: "home" });
+                        this.$router.push({ name: "article-detail", params: { id: this.$route.params.id } });
                     }
-                } else {
-                    console.log("error", response.data);
-                    this.$vaToast.init({
-                        message: "Error creating article!",
-                        color: "danger",
-                    });
                 }
             } catch (error) {
-                console.log("error", error);
                 this.$vaToast.init({
-                    message: "Error creating article!",
+                    message: "Error updating article!",
                     color: "danger",
                 });
             }
-        },
+        }
     },
+    mounted() {
+        // check user logged in or not
+        if (!this.$userStore.isLoggedIn) {
+            this.$vaToast.init({
+                message: "Please log in to edit an article",
+                color: "danger",
+            });
+            this.$router.push({name: "login"});
+        }
+
+        // fetch article data
+        this.fetchArticle();
+    }
 };
 
 export default ArticleEditView;
