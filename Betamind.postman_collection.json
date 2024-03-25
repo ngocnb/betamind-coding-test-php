@@ -1,0 +1,950 @@
+{
+	"info": {
+		"_postman_id": "63f63d0f-ee83-4a61-838b-0446a60aa491",
+		"name": "Betamind",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4320918"
+	},
+	"item": [
+		{
+			"name": "Users - log in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"token\", jsonData.user.token);\r",
+							"pm.collectionVariables.set(\"current_user_id\", jsonData.user.id);\r",
+							"\r",
+							"pm.test(\"User log in successfully\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.user.id).to.eql(1);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "admin@betamind.test",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "P@ssw0rd",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/users/login.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"login.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users - register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"User register successfully\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"    pm.expect(jsonData.data.email).not.eql(null);\r",
+							"    pm.expect(jsonData.data.email).not.eql(undefined);\r",
+							"    pm.expect(jsonData.data.id).not.eql(null);\r",
+							"    pm.expect(jsonData.data.id).not.eql(undefined);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "{{$randomEmail}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "P@ssw0rd",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/users/register.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"register.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Index",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get list articles successfully\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"    pm.expect(jsonData.articles.length).to.eql(10);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/articles.json?page=2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles.json"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - View",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get article successfully\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"    pm.expect(jsonData.articles.length).to.eql(10);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/articles/3.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"3.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - View when logged in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get article successfully\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"    pm.expect(jsonData.articles.length).to.eql(10);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/articles/{{article_id}}.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"{{article_id}}.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create article successfully\", function () {\r",
+							"    var currentUserId = pm.collectionVariables.get(\"current_user_id\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"    pm.expect(jsonData.data.id).not.eql(null);\r",
+							"    pm.expect(jsonData.data.id).not.eql(undefined);\r",
+							"    pm.expect(jsonData.data.user_id).to.eql(currentUserId);\r",
+							"\r",
+							"    pm.collectionVariables.set(\"article_id\", jsonData.data.id);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "{{$randomLoremSentence}}",
+							"type": "text"
+						},
+						{
+							"key": "body",
+							"value": "{{$randomLoremParagraph}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/articles.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Create - Empty title",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create article should fail\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(false);\r",
+							"    pm.expect(jsonData.errors).not.null;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "{{$randomLoremSentence}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "body",
+							"value": "{{$randomLoremParagraph}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/articles.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Create - Empty body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create article should fail\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(false);\r",
+							"    pm.expect(jsonData.errors).not.null;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "{{$randomLoremSentence}}",
+							"type": "text"
+						},
+						{
+							"key": "body",
+							"value": "{{$randomLoremParagraph}}",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/articles.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update article successfully\", function () {\r",
+							"    var currentUserId = pm.collectionVariables.get(\"current_user_id\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"    pm.expect(jsonData.data.id).not.eql(null);\r",
+							"    pm.expect(jsonData.data.id).not.eql(undefined);\r",
+							"    pm.expect(jsonData.data.user_id).to.eql(currentUserId);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Updated: {{$randomLoremSentence}}",
+							"type": "text"
+						},
+						{
+							"key": "body",
+							"value": "{{$randomLoremParagraph}}",
+							"type": "text"
+						},
+						{
+							"key": "_method",
+							"value": "PUT",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/articles/{{article_id}}.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"{{article_id}}.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Update - Empty title",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update article should fail\", function () {\r",
+							"    var currentUserId = pm.collectionVariables.get(\"current_user_id\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(false);\r",
+							"    pm.expect(jsonData.errors).not.null;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Updated: {{$randomLoremSentence}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "body",
+							"value": "{{$randomLoremParagraph}}",
+							"type": "text"
+						},
+						{
+							"key": "_method",
+							"value": "PUT",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/articles/{{article_id}}.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"{{article_id}}.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Update - Empty body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update article should fail\", function () {\r",
+							"    var currentUserId = pm.collectionVariables.get(\"current_user_id\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(false);\r",
+							"    pm.expect(jsonData.errors).not.null;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Updated: {{$randomLoremSentence}}",
+							"type": "text"
+						},
+						{
+							"key": "body",
+							"value": "{{$randomLoremParagraph}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "_method",
+							"value": "PUT",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/articles/{{article_id}}.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"{{article_id}}.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Update article from other user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update article should fail\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(false);\r",
+							"    pm.expect(jsonData.errors).to.eql('You are not authorized to edit this article.');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Updated: {{$randomLoremSentence}}",
+							"type": "text"
+						},
+						{
+							"key": "body",
+							"value": "{{$randomLoremParagraph}}",
+							"type": "text"
+						},
+						{
+							"key": "_method",
+							"value": "PUT",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/articles/1.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"1.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - React (Like)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Like an article successfully\", function () {\r",
+							"    var currentUserId = pm.collectionVariables.get(\"current_user_id\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"    pm.expect(jsonData.data.id).not.eql(null);\r",
+							"    pm.expect(jsonData.data.id).not.eql(undefined);\r",
+							"    pm.expect(jsonData.data.user_id).to.eql(currentUserId);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/articles/{{article_id}}/react.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"{{article_id}}",
+						"react.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Delete article",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete article successfully\", function () {\r",
+							"    var currentUserId = pm.collectionVariables.get(\"current_user_id\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/articles/{{article_id}}.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"{{article_id}}.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Delete article not existed",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/articles/999999.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"999999.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Articles - Delete article not from user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete article successfully\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(false);\r",
+							"    pm.expect(jsonData.errors).to.eql('You are not authorized to delete this article.');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/articles/1.json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"1.json"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://betamind.life-adventurer.com",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "current_user_id",
+			"value": ""
+		},
+		{
+			"key": "article_id",
+			"value": ""
+		}
+	]
+}
