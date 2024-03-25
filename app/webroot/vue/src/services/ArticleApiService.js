@@ -15,11 +15,13 @@ class ArticleApiSerivce {
         return ApiService.post("/api/articles.json", data);
     }
 
-    update(id, data) {
+    update(id, data, token) {
+        ApiService.defaults.headers.common["Token"] = token;
         return ApiService.put(`/api/articles/${id}.json`, data);
     }
 
-    delete(id) {
+    delete(id, token) {
+        ApiService.defaults.headers.common["Token"] = token;
         return ApiService.delete(`/api/articles/${id}.json`);
     }
 
