@@ -94,6 +94,8 @@ Validation:
 1. Home page will show the list of articles.
 2. Click the "Create new Article" link to create a new article. Need to be logged in to access this feature.
 3. Click on the article to view the article detail
+4. Click "Load more" to load more articles. Default pagination is 10 articles per page.
+5. Articles are sorted by the latest id descending.
 
 #### Create new article
 
