@@ -5,12 +5,12 @@ class ArticleApiSerivce {
         return ApiService.get(`/api/articles.json?page=${page}`);
     }
 
-    get(id) {
+    get(id, token = null) {
+        ApiService.defaults.headers.common["Token"] = token;
         return ApiService.get(`/api/articles/${id}.json`);
     }
 
     create(data, token) {
-        // add Token header
         ApiService.defaults.headers.common["Token"] = token;
         return ApiService.post("/api/articles.json", data);
     }
@@ -21,6 +21,11 @@ class ArticleApiSerivce {
 
     delete(id) {
         return ApiService.delete(`/api/articles/${id}.json`);
+    }
+
+    react(id, token) {
+        ApiService.defaults.headers.common["Token"] = token;
+        return ApiService.post(`/api/articles/${id}/react.json`);
     }
 }
 
