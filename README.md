@@ -60,28 +60,44 @@ Please run the migration and seed data before running the test.
 
 Default user: `admin@betamind.test`. Password: `P@ssw0rd`.
 
+For the API test, you can import the Postman collection file: `Betamind.postman_collection.json`.
+
 Please build the frontend before running the test.
 
-You can test the application on http://betamind.life-adventurer.com/.
-
-For the API test, you can import the Postman collection file: `Betamind.postman_collection.json`.
+You can test the application on http://betamind.life-adventurer.com/. It has both frontend and backend api.
 
 ### Authentication
 
 #### Sign up
 
-1. Open the application on your browser.
-2. Click the "Sign up" link.
-3. Fill in the form with email and password.
-4. Click the "Sign up" button.
+API test:
+- Endpoint: `/api/users/register.json`
+- Method: POST
+- Body: `email`, `password`, `password_confirmation`
 
 Validation:
 - Email is required and must be a valid email.
 - Password is required and must have a minimum of 8 characters.
 - Password confirmation must match the password.
 
+Frontend test:
+1. Open the application on your browser.
+2. Click the "Sign up" link.
+3. Fill in the form with email and password.
+4. Click the "Sign up" button.
+
 #### Log in
 
+API test:
+- Endpoint: `/users/login.json`
+- Method: POST
+- Response will have token for authentication.
+
+Validation:
+- Email and password must be provided.
+- Email and password must match the user in the database.
+
+Frontend test:
 1. Open the application on your browser.
 2. Click the "Log in" link.
 3. Fill in the form with email and password.
@@ -91,6 +107,12 @@ Validation:
 
 #### Home page
 
+API test:
+- Endpoint: `/api/articles.json?page=1`
+- Method: GET
+- Change the page number to load more articles.
+
+Frontend test:
 1. Home page will show the list of articles.
 2. Click the "Create new Article" link to create a new article. Need to be logged in to access this feature.
 3. Click on the article to view the article detail
@@ -99,17 +121,30 @@ Validation:
 
 #### Create new article
 
+API test:
+- Endpoint: `/api/articles.json`
+- Method: POST
+- Header: `Token: {token}`
+- Body: `title`, `body`
+
+Validation:
+- Title is required and have a maximum of 254 characters.
+- Body is required and have a maximum of 3999 characters.
+- User must be logged in to create an article.
+
+Frontend test:
 1. Click the "Create new Article" link on the home page.
 2. Fill in the form with title and content.
 3. Click the "Create" button.
 4. The article will be created and redirect to the article detail page.
 
-Validation:
-- Title is required and have a maximum of 254 characters.
-- Content is required and have a maximum of 3999 characters.
-
 #### Article detail
 
+API test:
+- Endpoint: `/api/articles/{id}.json` where `{id}` is the article id.
+- Method: GET (for article detail)
+
+Frontend test:
 1. Click on the article on the home page.
 2. The article detail page will show the article title, content, the author and like count.
 3. Click the "Like" button to like the article. Need to be logged in to access this feature.
@@ -118,17 +153,35 @@ Validation:
 
 #### Article edit
 
+API test:
+- Endpoint: `/api/articles/{id}.json`
+- Method: PUT
+- Header: `Token: {token}`
+- Body: `title`, `body`
+
+Validation:
+- Title is required and have a maximum of 254 characters.
+- Body is required and have a maximum of 3999 characters.
+- User must be logged in to edit an article.
+- User must be the author to edit the article.
+
+Frontend test:
 1. Click the "Edit" button on the article detail page.
 2. Fill in the form with title and content.
 3. Click the "Update" button.
 4. The article will be updated and redirect to the article detail page.
 
-Validation:
-- Title is required and have a maximum of 254 characters.
-- Content is required and have a maximum of 3999 characters.
-
 #### Delete article
 
+API test:
+- Endpoint: `/api/articles/{id}.json` where `{id}` is the article id.
+- Method: DELETE (for article delete)
+
+Validation:
+- User must be logged in to delete an article.
+- User must be the author to delete the article.
+
+Frontend test:
 1. Click the "Delete" button on the article detail page.
 2. The confirmation dialog will show.
 3. Click "Yes" to delete the article.
@@ -136,6 +189,17 @@ Validation:
 
 ### Like Feature
 
+API test:
+- Endpoint: `/api/articles/{id}/react.json`
+- Method: POST
+
+Validation:
+- User must be logged in to like an article.
+- User can only like the article once.
+- User cannot unlike the article.
+- User can like his own article.
+
+Frontend test:
 1. Click on the article on the home page.
 2. The article detail page will show the article title, content, the author and like count.
 3. Click the "Like" button to like the article. Need to be logged in to access this feature.
