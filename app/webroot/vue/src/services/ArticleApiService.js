@@ -9,7 +9,9 @@ class ArticleApiSerivce {
         return ApiService.get(`/api/articles/${id}.json`);
     }
 
-    create(data) {
+    create(data, token) {
+        // add Token header
+        ApiService.defaults.headers.common["Token"] = token;
         return ApiService.post("/api/articles.json", data);
     }
 
