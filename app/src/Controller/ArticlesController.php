@@ -27,7 +27,9 @@ class ArticlesController extends AppController {
      */
     public function index() {
         $this->paginate = [
-            'contain' => ['Users'],
+            'contain' => ['Users' => function ($q) {
+                return $q->select(['id', 'email']);
+            }],
         ];
         $articles = $this->paginate($this->Articles, [
             'limit' => 10,
@@ -48,7 +50,9 @@ class ArticlesController extends AppController {
      */
     public function view($id = null) {
         $article = $this->Articles->get($id, [
-            'contain' => ['Users'],
+            'contain' => ['Users' => function ($q) {
+                return $q->select(['id', 'email']);
+            }],
         ]);
 
         try {

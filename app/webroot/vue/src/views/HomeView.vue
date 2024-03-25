@@ -47,6 +47,9 @@ export default HomeView;
             <VaCardContent>
                 {{ article.body.substring(0, 100) }}...
             </VaCardContent>
+            <VaCardTitle>
+                By: {{ article.user.email }}
+            </VaCardTitle>
         </VaCard>
     </div>
     <div class="button-wrapper">
