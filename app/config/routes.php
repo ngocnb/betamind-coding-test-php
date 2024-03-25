@@ -29,7 +29,7 @@ use Cake\Routing\Route\DashedRoute;
  * So you can use  `$this` to reference the application class instance
  * if required.
  */
-return function (RouteBuilder $routes): void {
+return function (RouteBuilder $routes): void{
     /*
      * The default class to use for all routes
      *
@@ -51,7 +51,7 @@ return function (RouteBuilder $routes): void {
 
     $routes->setExtensions(['json', 'xml']);
 
-    $routes->scope('/', function (RouteBuilder $builder): void {
+    $routes->scope('/', function (RouteBuilder $builder): void{
         /*
          * Here, we are connecting '/' (base path) to a controller called 'Pages',
          * its action called 'display', and we pass a param to select the view file
@@ -61,6 +61,8 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/signup', ['controller' => 'Pages', 'action' => 'display', 'home']);
         $builder->connect('/login', ['controller' => 'Pages', 'action' => 'display', 'home']);
         $builder->connect('/article/{id}', ['controller' => 'Pages', 'action' => 'display', 'home']);
+        $builder->connect('/article/create', ['controller' => 'Pages', 'action' => 'display', 'home']);
+        $builder->connect('/article/edit/{id}', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
         /*
          * Connect catchall routes for all controllers.
@@ -93,7 +95,7 @@ return function (RouteBuilder $routes): void {
      * });
      * ```
      */
-    $routes->scope('/api', function (RouteBuilder $builder): void {
+    $routes->scope('/api', function (RouteBuilder $builder): void{
         $builder->setExtensions(['json']);
 
         $builder->connect('/users/register', ['controller' => 'Users', 'action' => 'register', '_method' => 'POST']);
